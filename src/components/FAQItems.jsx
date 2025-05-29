@@ -17,10 +17,16 @@ const FAQItems = ({ item, onClick, isOpen }) => {
         onClick={() => onClick(item.id)}
       >
         <span className="text-lg font-medium pr-6">{item.question}</span>
-        <div className="flex-shrink-0 flex items-center justify-center w-8 min-w-8 aspect-square rounded-full bg-gray-200 dark:bg-gray-700 transition-all duration-300">
+        <div
+          className={`flex-shrink-0 flex items-center justify-center w-8 min-w-8 aspect-square rounded-full ${
+            isOpen
+              ? "bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 dark:bg-gray-700"
+              : "bg-gray-200 dark:bg-gray-700"
+          }  `}
+        >
           <i
             className={`bx bx-chevron-${
-              isOpen ? "up" : "down"
+              isOpen ? "up text-white" : "down"
             } text-lg text-gray-600 dark:text-gray-300`}
           ></i>
         </div>
