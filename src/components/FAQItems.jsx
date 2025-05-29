@@ -16,7 +16,9 @@ const FAQItems = ({ item, onClick, isOpen }) => {
         }`}
         onClick={() => onClick(item.id)}
       >
-        <span className="text-lg font-medium pr-6">{item.question}</span>
+        <span className="text-[16px] md:text-lg font-medium pr-6">
+          {item.question}
+        </span>
         <div
           className={`flex-shrink-0 flex items-center justify-center w-8 min-w-8 aspect-square rounded-full ${
             isOpen
