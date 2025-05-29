@@ -1,7 +1,33 @@
+import { useState, useEffect } from "react";
 import FAQItems from "./FAQItems";
 import faqData from "../data/FAQData";
 
 const FAQList = ({ toggleDarkMode, darkMode }) => {
+  const [openId, setOpenId] = useState(null);
+  const [expandAll, setExpandAll] = useState(false);
+
+  const handleToggle = (id) => {
+    if (expandAll) {
+      setExpandAll(false);
+    }
+    setOpenId((prevId) => (prevId === id ? null : id));
+  };
+
+  const handleExpandAll = () => {
+    setExpandAll((prev) => !prev);
+    setOpenId(null);
+  };
+
+  useEffect(() => {
+    if (openId && typeof window !== "undefined") {
+      setTimeout(() => {}, 100); // Ensures the component is mounted before accessing the DOM
+      const element = document.getElementById(`faq-item-${openId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [openId]);
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -9,9 +35,18 @@ const FAQList = ({ toggleDarkMode, darkMode }) => {
           Frequently asked questions
         </h2>
         <div className="flex items-center space-x-4">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover: rounded-lg shadow-sm hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all duration-300 cursor-pointer">
-            <i className="bx bx-collapse-alt text-lg"></i>
-            <span className="text-sm">Expand all</span>
+          <button
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover: rounded-lg shadow-sm hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all duration-300 cursor-pointer"
+            onClick={handleExpandAll}
+          >
+            <i
+              className={`bx bx-${
+                expandAll ? "collapse-alt" : "expand-alt"
+              } text-lg`}
+            ></i>
+            <span className="text-sm">
+              {expandAll ? "Collapse All" : "Expand All"}
+            </span>
           </button>
           <button
             onClick={toggleDarkMode}
@@ -21,9 +56,14 @@ const FAQList = ({ toggleDarkMode, darkMode }) => {
           </button>
         </div>
       </div>
-      <div className="bg-white/80 dark:bg-gray-800/80 rounded-xl shadow-lg border border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden transition-all duration-300 ">
+      <div className="bg-white/80 dark:bg-gray-800/80 rounded-xl shadow-lg border border-indigo-100/50 dark:border-indigo-900/30 overflow-hidden transition-all duration-200 ease-out">
         {faqData.map((item) => (
-          <FAQItems key={item.id} item={item} />
+          <FAQItems
+            key={item.id}
+            item={item}
+            onClick={handleToggle}
+            isOpen={expandAll || openId === item.id}
+          />
         ))}
       </div>
     </div>
